@@ -1,0 +1,1 @@
+exports.USERS_TABLE_NAME = 'userTable'
