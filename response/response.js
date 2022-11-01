@@ -13,6 +13,13 @@ class Response {
       message: "Not Found",
     };
   }
+
+  generateInvalidRequest() {
+    return {
+      status: 400,
+      message: "Bad Request, Please verify request body"
+    }
+  }
 }
 
 module.exports = Response;

@@ -27,6 +27,16 @@ class Helper {
     }
     return obj;
   }
+
+  validateRequest(req, keysRequired) {
+    const keysPassed = Object.keys(req);
+    for (const key of keysRequired) {
+      if(!keysPassed.includes(key) || !req[key]) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 module.exports = Helper;

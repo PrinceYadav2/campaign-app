@@ -6,7 +6,6 @@ const helper = new Helper();
 const response = new Response();
 
 exports.findOrgByUID = async (req, res, next) => {
-  console.log("HERE" + req.params.uid);
   const uid = req.params.uid;
   const [rows, fields] = await Organization.getOrganizationByUid(uid);
   if (rows.length === 0) {
