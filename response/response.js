@@ -7,10 +7,10 @@ class Response {
     };
   }
 
-  generateNotFoundResp() {
+  generateNotFoundResp(mess='') {
     return {
       status: 404,
-      message: "Not Found",
+      message: mess ? mess : "Not Found",
     };
   }
 

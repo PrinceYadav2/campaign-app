@@ -31,11 +31,16 @@ class Helper {
   validateRequest(req, keysRequired) {
     const keysPassed = Object.keys(req);
     for (const key of keysRequired) {
-      if(!keysPassed.includes(key) || !req[key]) {
+      if (!keysPassed.includes(key) || !req[key]) {
         return false;
       }
     }
     return true;
+  }
+
+  generateUID(orgId, deviceId) {
+    const deviceUID = orgId + "-" + String(deviceId).padStart(4, "0");
+    return deviceUID;
   }
 }
 
