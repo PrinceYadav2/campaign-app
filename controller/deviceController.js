@@ -1,9 +1,43 @@
 const Device = require("../models/device");
 const Response = require("../response/response");
 const Helper = require("../helpers/helpers");
+const Organization = require("../models/organization");
+const Resolution = require("../models/resolution");
 
 const helper = new Helper();
 const response = new Response();
+
+exports.getAllDevices = async (req, res, next) => {
+  const orgId = req.params.id;
+  const [rows, fields] = await Device.getAllDevices(orgId);
+  if (rows.length === 0) {
+    res.status(404).json(response.generateNotFoundResp());
+  }
+  const keysRequired = [
+    "id",
+    "uid",
+    "deviceName",
+    "device",
+    "deviceBrand",
+    "deviceSize",
+    "deviceLocation",
+    "deviceStatus",
+    "playingCampaign",
+    "activeCampaigns",
+    "createdAt",
+    "updatedAt",
+    "organizationID",
+    "resolutionId",
+  ];
+  const data = rows.map(row=> helper.filterKeys(row, keysRequired));
+  
+  for (const row of data) {
+    row.organization = await Organization.getOrganizationProperties(row.organizationID, ['id', 'uid', 'name', 'createdAt', 'updatedAt']);
+    row.resolution = await Resolution.getResolutionProperties(row.resolutionId, ['id', 'resolutionType', 'commonName', 'aspectRatio', 'pixelSize'])
+  }
+  const rep = response.generateResponse(200, "SUCCESS", data);
+  res.status(200).json(rep);
+}
 
 exports.addDevice = async (req, res, next) => {
   const reqkeysRequired = [

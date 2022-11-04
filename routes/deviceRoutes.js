@@ -5,6 +5,6 @@ const deviceController = require('../controller/deviceController');
 const router = express.Router();
 
 
-router.route('/:id/devices/').post(deviceController.addDevice);
+router.route('/:id/devices/').post(deviceController.addDevice).get(deviceController.getAllDevices);
 
 module.exports = router;

@@ -35,22 +35,20 @@ class Device {
       await Resolution.getResolutionById(this.resolutionId);
     const deviceResolution = deviceResolutionRow[0]["commonName"];
     const date = helper.getCurrentDate();
-    const orgName = await Organization.getOrganizationProperty(orgId, 'name');
+    const orgName = await Organization.getOrganizationProperty(orgId, "name");
     const sql = `INSERT INTO ${DEVICE_TABLE_NAME} (uid, deviceName, device, deviceBrand, deviceResolution, deviceSize, deviceLocation, deviceStatus, playingCampaign, activeCampaigns, createdAt, updatedAt, organization, organizationID, resolutionId, campaigns) VALUES('${deviceUID}','${this.deviceName}', '${this.deviceModel}',  '${this.deviceBrand}', '${deviceResolution}', '${this.deviceSize}', '${this.deviceLocation}', '${this.deviceStatus}', 'No', '1', '${date}', '${date}', '${orgName}', '${orgId}', '${this.resolutionId}', '[]');`;
     return db.execute(sql);
   }
 
   getDeviceByID(id) {
     const sql = `SELECT * FROM ${DEVICE_TABLE_NAME} WHERE id = ${id};`;
-    return db.execute(sql); 
+    return db.execute(sql);
   }
 
-  
-
-  // static getAllDevices(or) {
-  //   const sql = `SELECT * FROM ${DEVICE_TABLE_NAME} where id = '$';`;
-  //   return db.execute(sql);
-  // }
+  static getAllDevices(orgId) {
+    const sql = `SELECT * FROM ${DEVICE_TABLE_NAME} where organizationID = '${orgId}';`;
+    return db.execute(sql);
+  }
 }
 
 module.exports = Device;

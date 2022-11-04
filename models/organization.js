@@ -35,11 +35,18 @@ class Organization {
     return helper.generateUID(uid, devices.length);
   }
 
+  static async getOrganizationProperties(orgId, properties) {
+    const sql = `SELECT ${properties.join(' ,')} FROM ${ORGANIZATION_TABLE_NAME} WHERE id = ${orgId}`;
+    const [rows, _ ] = await db.execute(sql);
+    return helper.filterKeys(rows[0], properties);
+  }
+
   static async getOrganizationProperty(orgId, property) {
     const sql = `SELECT ${property} FROM ${ORGANIZATION_TABLE_NAME} WHERE id = ${orgId};`;
     const [row, fields] = await db.execute(sql);
     return row[0] ? row[0][property] : false; 
   }
+  
 }
 
 module.exports = Organization;
