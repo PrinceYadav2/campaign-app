@@ -2,10 +2,7 @@ const db = require("../dbServer");
 const Organization = require("./organization");
 const Resolution = require("./resolution");
 const Helper = require("../helpers/helpers");
-const {
-  DEVICE_TABLE_NAME,
-  ORGANIZATION_TABLE_NAME,
-} = require("../utils/constant");
+const { DEVICE_TABLE_NAME } = require("../utils/constant");
 
 const helper = new Helper();
 
@@ -39,9 +36,13 @@ class Device {
     const deviceResolution = deviceResolutionRow[0]["commonName"];
     const date = helper.getCurrentDate();
     const orgName = await Organization.getOrganizationProperty(orgId, 'name');
-    console.log(orgName);
-    const sql = `INSERT INTO ${DEVICE_TABLE_NAME} (uid, deviceName, device, deviceBrand, deviceResolution, deviceSize, deviceLocation, deviceStatus, playingCampaign, activeCampaigns, createdAt, updatedAt, organization, organizationId, resolutionId, campaigns) VALUES('${deviceUID}','${this.deviceName}', '${this.deviceModel}',  '${this.deviceBrand}', '${deviceResolution}', '${this.deviceSize}', '${this.deviceLocation}', '${this.deviceStatus}', '[]', '[]', '${date}', '${date}', '', '${orgId}', '${this.resolutionId}', '[]');`;
+    const sql = `INSERT INTO ${DEVICE_TABLE_NAME} (uid, deviceName, device, deviceBrand, deviceResolution, deviceSize, deviceLocation, deviceStatus, playingCampaign, activeCampaigns, createdAt, updatedAt, organization, organizationID, resolutionId, campaigns) VALUES('${deviceUID}','${this.deviceName}', '${this.deviceModel}',  '${this.deviceBrand}', '${deviceResolution}', '${this.deviceSize}', '${this.deviceLocation}', '${this.deviceStatus}', 'No', '1', '${date}', '${date}', '${orgName}', '${orgId}', '${this.resolutionId}', '[]');`;
     return db.execute(sql);
+  }
+
+  getDeviceByID(id) {
+    const sql = `SELECT * FROM ${DEVICE_TABLE_NAME} WHERE id = ${id};`;
+    return db.execute(sql); 
   }
 
   

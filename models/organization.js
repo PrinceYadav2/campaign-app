@@ -1,12 +1,13 @@
 const db = require("../dbServer");
-const { ORGANIZATION_TABLE_NAME } = require("../utils/constant");
+const Helper = require("../helpers/helpers");
+const { ORGANIZATION_TABLE_NAME, DEVICE_TABLE_NAME } = require("../utils/constant");
 
+const helper = new Helper();
 class Organization {
   constructor() {}
 
   static getOrganizationByUid(uid) {
     const sql = `SELECT * FROM ${ORGANIZATION_TABLE_NAME} WHERE uid = '${uid}';`;
-    console.log(sql);
     return db.execute(sql);
   }
 

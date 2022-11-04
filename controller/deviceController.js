@@ -6,7 +6,7 @@ const helper = new Helper();
 const response = new Response();
 
 exports.addDevice = async (req, res, next) => {
-  keysRequired = [
+  const reqkeysRequired = [
     "deviceName",
     "deviceModel",
     "deviceBrand",
@@ -16,10 +16,9 @@ exports.addDevice = async (req, res, next) => {
     "deviceStatus",
   ];
   // Verify If request body contains needed keys & value is present for them too.
-  const isRequestValidated = helper.validateRequest(req.body, keysRequired);
+  const isRequestValidated = helper.validateRequest(req.body, reqkeysRequired);
   // Verify the format the orgId.
   const orgId = req.params.id;
-  console.log("Organziation ID", orgId);
   const orgRegxp = /^\d+$/;
   if (!isRequestValidated || !orgRegxp.test(orgId)) {
     const resp = response.generateInvalidRequest();
@@ -51,6 +50,23 @@ exports.addDevice = async (req, res, next) => {
     );
     res.status(404).json(resp);
   }
-
-  res.json({ status: 200, message: "We are good" });
+  const [deviceRow, deviceFields] = await device.getDeviceByID(rows["insertId"]);
+  const resKeysRequired = [
+    "id",
+    "uid",
+    "deviceName",
+    "device",
+    "deviceBrand",
+    "deviceSize",
+    "deviceLocation",
+    "deviceStatus",
+    "playingCampaign",
+    "activeCampaigns",
+    "createdAt",
+    "updatedAt",
+    "organizationID",
+    "resolutionId",
+  ];
+  const data = helper.filterKeys(deviceRow[0], resKeysRequired);
+  res.json(response.generateResponse(200, "SUCCESS", data));
 };
