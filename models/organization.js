@@ -11,28 +11,28 @@ class Organization {
     return db.execute(sql);
   }
 
-  static async updateOrganization(orgId) {
-    const sql = `SELECT device, uid FROM ${ORGANIZATION_TABLE_NAME} where id = '${orgId}';`;
+  static async updateOrganization(orgId, column) {
+    const sql = `SELECT ${column}, uid FROM ${ORGANIZATION_TABLE_NAME} where id = '${orgId}';`;
     const [row, fields] = await db.execute(sql);
     if (!row[0]) {
       return false;
     }
-    const devices = JSON.parse(row[0]["device"]);
+    const elements = JSON.parse(row[0][column]);
     const uid = row[0].uid;
-    const deviceCountQuery = `SELECT MAX(id) FROM ${DEVICE_TABLE_NAME}`;
-    const [deviceRows, deviceFields] = await db.execute(deviceCountQuery);
+    const columnCountQuery = `SELECT MAX(id) FROM ${DEVICE_TABLE_NAME}`;
+    const [columnRows, columnFields] = await db.execute(columnCountQuery);
 
-    const deviceId = !deviceRows[0]["MAX(id)"]
+    const columnId = !columnRows[0]["MAX(id)"]
       ? 1
-      : deviceRows[0]["MAX(id)"] + 1;
-    if (!devices.includes(deviceId)) {
-      devices.push(deviceId);
+      : columnRows[0]["MAX(id)"] + 1;
+    if (!elements.includes(columnId)) {
+      elements.push(columnId);
     }
-    const updateQuery = `UPDATE ${ORGANIZATION_TABLE_NAME} SET device = '${JSON.stringify(
-      devices
+    const updateQuery = `UPDATE ${ORGANIZATION_TABLE_NAME} SET ${column} = '${JSON.stringify(
+      elements
     )}' WHERE id = ${orgId};`;
     await db.execute(updateQuery);
-    return helper.generateUID(uid, devices.length);
+    return helper.generateUID(uid, elements.length);
   }
 
   static async getOrganizationProperties(orgId, properties) {

@@ -26,7 +26,7 @@ class Device {
   }
 
   async save(orgId) {
-    const deviceUID = await Organization.updateOrganization(orgId);
+    const deviceUID = await Organization.updateOrganization(orgId, 'device');
     if (deviceUID === false) {
       return [false];
     }
